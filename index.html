@@ -17,18 +17,30 @@
 
   <aside id="sidebar">
     <h2>पाठसूची</h2>
-    <input id="searchInput" type="text" placeholder="पाठ खोजें...">
+    <input id="searchInput" oninput="leftSearch()" type="text" placeholder="पाठ खोजें...">
     <select id="filterAdhyay"><option value="">अध्यायं चिनुयात्</option></select>
     <button id="filterBookmarked">📚 केवल बुकमार्क</button>
-    <ul id="sutraList"></ul>
+       <ul id="sutraList"></ul>
   </aside>
-
 
 
   <div id="tipsBox"></div>
   <main onclick="toggleSidebar(true)">
     <div id="sutraContent"></div>
   </main>
-  <script src="script.js"></script>
+
+   <aside id="markSidebar">
+  <h2>निर्वचन-सूची</h2>
+
+  <div class="markSearch">
+    <input id="markSearchInput" type="search" placeholder="शब्द खोजें..." />
+    <span id="markSearchCount"></span>
+  </div>
+
+  <ul id="markList"></ul>
+</aside>
+
+
+ <script src="script.js" defer></script>
 </body>
 </html>
