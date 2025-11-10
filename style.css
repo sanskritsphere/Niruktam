@@ -1,0 +1,251 @@
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&display=swap');
+    body, main, .sutra {
+      font-family: 'Noto Serif Devanagari', 'Sanskrit Text', serif;
+    }
+    body {
+      margin: 0;
+      overflow: auto;        
+      scrollbar-width: none; 
+    }
+    html::-webkit-scrollbar {
+  display: none;
+}
+    aside {
+      width: 300px;
+      overflow-y: scroll;
+      background: #f4f1ea;
+      border-right: 1px solid #ccc;
+      padding: 1rem;
+      transition: transform 0.3s ease-in-out;
+      position: fixed;
+      top: 55px;
+      z-index: 3;
+      height: 100vh;
+      scroll-behavior: smooth;
+    }
+    aside h2 {
+      margin-top: 0;
+      color: #7a5200;
+    }
+    #searchInput, #filterAdhyay, #filterPaad, #filterBookmarked {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      padding: 0.4rem;
+    }
+    #searchInput {
+      width: 94%;
+    }
+    aside ul {
+      list-style: none;
+      padding: 0;
+    }
+    aside li {
+      padding: 0.5rem;
+      cursor: pointer;
+      border-bottom: 1px solid #ddd;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: relative;
+    }
+    aside li:hover, aside li.active {
+      background-color: #e0dacd;
+    }
+    main {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      margin-left: 350px;
+      margin-top: 30px;
+    }
+    .sutra h2 {
+      margin-top: 0;
+      color: #b4601b;
+      background-color: #fff8dc;
+      padding: 0.75rem 1rem;
+      /* border-left: 5px solid #b4601b; */
+      border-radius: 8px;
+      font-size: 1.1rem;
+      color: #5b4200;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      font-style: italic;
+      line-height: 1.6;
+    }
+    .meta, .section {
+      margin-top: 1rem;
+    }
+    .meta {
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #5b4200;
+      font-style: italic;
+      line-height: .6;
+      display: block;
+      text-align: center;
+    }
+
+    #sutra_display {
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 15px;
+      text-align: center;
+      font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Sanskrit', 'Mukta', serif;
+      font-size: 1.5rem;
+      line-height: 2.2rem;
+      color: #4b2e05;
+    }
+
+    .section {
+      padding: .5rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      color: #3e2e00;
+      line-height: 1.7;
+      /* text-align: center; */
+    }
+    .section strong {
+      display: block;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: #7a5200;
+      font-size: 1.2rem;
+      padding: 0px 20px;
+      border-radius: 20px;
+    }
+    .bookmark {
+      background-color: #ffe680;
+    }
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #7a5200;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      z-index: 1000;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #tipsBox {
+      margin: auto;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #e6f2ff;
+      border: 1px solid #a0c6ff;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-style: italic;
+      color: #003366;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      z-index: 9999;
+    }
+    .toggle-content {
+      display: none;
+      margin-top: 0.5rem;
+      border-radius: 6px;
+      background:bottom;
+    }
+  .toggle-btn {
+  background-color: #ffffff;
+  color: #a63f00;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  transition: background-color 0.9s ease;
+}
+
+    #header {
+      background-color: #b4601b;
+      height: 60px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 25px;
+      font-weight: 400;
+      color: #ffffff;
+    }
+    .sutra-btn {
+      margin: 20px auto;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      border-radius: 10px;
+    }
+    .sutra-btn button {
+      margin: 10px;
+      color: #e35353;
+      padding: 5px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #cccccc00;
+    }
+    .sutra-btn button:hover {
+      box-shadow: 0 6px 6px rgba(0, 0, 0, 0.3);
+      transform: translateY(-2px);
+    }
+    .sutra-btn button:active {
+      background-color: #f9af5b;
+      transform: translateY(0);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    }
+    #filterBookmarked {
+      cursor: pointer;
+    }
+
+  .mantr{
+    color: #a63f00;
+  }
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      aside {
+        position: absolute;
+        top: 55px;
+        left: 0;
+        height: 100vh;
+        width: 250px;
+        transform: translateX(-100%);
+        z-index: 0;
+      }
+      aside.open {
+        transform: translateX(0);
+      }
+      
+      .menu-toggle{
+        display: block;
+      }
+      main {
+        padding: 1rem;
+        margin-left: 5px;
+        margin-top: 50px;
+      }
+    }
+  .add-remove-bookmark{
+    position: fixed;
+    right: 10px;
+    bottom: 50px;
+    z-index: 99999;
+  }
