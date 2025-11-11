@@ -44,7 +44,7 @@ aside:not(#markSidebar) {
 }
 aside:not(#markSidebar) h2 {
   margin-top: 0;
-  color: #7a5200;
+  color: #244a6e;
 }
 #searchInput, #filterAdhyay, #filterPaad, #filterBookmarked {
   width: 100%;
