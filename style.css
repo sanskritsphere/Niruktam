@@ -293,3 +293,6 @@ main{
   color: #d20000;
   background-color: #eaff00;
 }
+
+.main-flash { background:#ffef8a; border-radius:3px; transition:background 1.2s ease; animation: mainFlash 1.2s ease-out 1; }
+@keyframes mainFlash { 0%{background:#ffef8a;} 100%{background:transparent;} }
