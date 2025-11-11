@@ -2,14 +2,24 @@
 let data = [];
 let currentIndex = 0;
 let listElements = [];
-const terms = [];                       // right sidebar terms
-const MARK_RE = /b(.*?)b/g;
+
+const TAGS = [
+  { key: 'b', label: 'निर्वचन' },  // b(.*?)b
+  { key: 'm', label: 'मन्त्र' },   // m(.*?)m
+  { key: 'v', label: 'विशेष' }     // v(.*?)v
+];
+
+const termsByTag = {};               // { b:[], m:[], v:[] }
+TAGS.forEach(t => termsByTag[t.key] = []);
 
 const bookmarked = new Set();
 const doubts = JSON.parse(localStorage.getItem('doubts') || '[]');
 
-const markState = { query: "" };        // right sidebar search
-const leftSearchState = { q: "" };      // left sidebar search
+const markState = { query: "", activeTag: 'b' };  // right sidebar
+const leftSearchState = { q: "" };                // left sidebar search
+
+// सिर्फ left-labels के लिए b...b unwrap (list label generate करते समय)
+const MARK_RE_B = /b(.*?)b/g;
 
 
 // =============== HELPERS ===============
@@ -21,7 +31,6 @@ function escapeHTML(s=""){
   }[c]));
 }
 
-// Devanagari-friendly highlight (right sidebar)
 function highlightLabel(label="", q=""){
   label = normalizeNFC(label);
   q = normalizeNFC(q);
@@ -31,20 +40,11 @@ function highlightLabel(label="", q=""){
   return safe.replace(re, m => `<span class="mark">${m}</span>`);
 }
 
-// Remove HTML + unwrap b...b → plain text (left labels)
-function plainFromMarked(s){
-  if (!s) return "";
-  s = s.replace(/<[^>]*>/g, "");
-  s = s.replace(MARK_RE, (_, p1) => (p1 || "").trim());
-  return s.trim().replace(/\s+/g, " ");
-}
-
 function debounce(fn, wait = 200){
   let t; 
   return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
 }
 
-// Wrap doubts with highlight span
 function highlightDoubts(text, doubtTexts) {
   if (!text) return '';
   let out = text;
@@ -57,21 +57,7 @@ function highlightDoubts(text, doubtTexts) {
   return out;
 }
 
-// b...b → anchor + collect for right sidebar
-function markAndCollect(str, sutraIdx, field) {
-  if (!str) return { html: '', localTerms: [] };
-  let i = 0;
-  const localTerms = [];
-  const html = str.replace(MARK_RE, (m, p1) => {
-    const id = `mark-${sutraIdx}-${field}-${i++}`;
-    const label = (p1 || '').trim();
-    localTerms.push({ id, label, sutraIdx, field });
-    return `<span class="mark-anchor" id="${id}"><b>${label}</b></span>`;
-  });
-  return { html, localTerms };
-}
-
-/* ========= NEW: main content temporary highlight after click ========= */
+/* ========= main content temporary highlight after click ========= */
 function flashSearchInMain(query, duration = 1600){
   query = (query || "").trim();
   if (!query) return;
@@ -84,9 +70,7 @@ function flashSearchInMain(query, duration = 1600){
   container.querySelectorAll('.main-flash').forEach(span => {
     const text = document.createTextNode(span.textContent);
     const p = span.parentNode;
-    if (p) {
-      p.replaceChild(text, span);
-    }
+    if (p) p.replaceChild(text, span);
   });
 
   // walk text nodes and wrap matches
@@ -149,7 +133,33 @@ function flashSearchInMain(query, duration = 1600){
     });
   }, duration);
 }
-/* ========= /NEW ========= */
+/* ========= /flash ========= */
+
+/* ========= SINGLE-PASS tag collector: b/m/v/... =========
+   किसी एक replace से सारे tags पकड़ो ताकि HTML inject होने के बाद regex न बिगड़े  */
+function processAllTags(str, sutraIdx, field){
+  let src = str || '';
+  if (!src) return { html: '' };
+
+  const keys = TAGS.map(t => t.key);                   // ['b','m','v',...]
+  const re = new RegExp(`(${keys.join("|")})([\\s\\S]*?)\\1`, "g"); // (b|m|v) ... \1
+
+  const counters = Object.fromEntries(keys.map(k => [k, 0]));
+
+  const html = src.replace(re, (m, tagKey, inner) => {
+    const i = counters[tagKey]++;
+    const id = `mark-${tagKey}-${sutraIdx}-${field}-${i}`;
+    const label = (inner || '').trim();
+
+    // collect strictly into active tag bucket
+    termsByTag[tagKey].push({ id, label, sutraIdx, field, tag: tagKey });
+
+    // visible anchor (escape to avoid leaking tags)
+    return `<span class="mark-anchor tag-${tagKey}" id="${id}"><b>${escapeHTML(label)}</b></span>`;
+  });
+
+  return { html };
+}
 
 
 // =============== RENDER: MAIN PANEL ===============
@@ -191,12 +201,12 @@ function renderSutra(index) {
 
   listElements.forEach((el, i) => {
     el.classList.toggle('active', i === index);
-    if (i === index) document.title = `निरुक्त_(${sutra.index})`;
+    if (i === index) document.title = `นिरुक्त_(${sutra.index})`;
   });
 }
 
 
-// =============== LEFT LIST ===============
+// =============== LEFT LIST (always from plain) ===============
 function populateSidebar() {
   const ul = document.getElementById('sutraList');
   if (!ul) return;
@@ -205,19 +215,19 @@ function populateSidebar() {
   listElements = [];
 
   data.forEach((sutra, index) => {
-    const li = document.createElement('li');
-    const txtPlain = plainFromMarked(sutra.text || sutra.title || "");
-    const title = `${sutra.index}: ${txtPlain}`;
-    const label = title; 
+    const base = `${sutra.index}: ${sutra.text_plain || ""}`.trim();
+    const title = base;
+    const label = base;
 
-    li.textContent = label;
+    const li = document.createElement('li');
+    li.textContent = label;          // plain
     li.title = title;
+    li.dataset.baseLabel = label;    // restore के लिए
 
     li.onclick = (e) => {
       e.stopPropagation();
       currentIndex = index;
       renderSutra(index);
-      // NEW: left search query को main में थोड़ी देर flash करो
       if (leftSearchState.q && leftSearchState.q.trim()) {
         setTimeout(() => flashSearchInMain(leftSearchState.q), 60);
       }
@@ -225,6 +235,7 @@ function populateSidebar() {
     };
 
     listElements.push(li);
+    ul.appendChild(li);
   });
 }
 
@@ -245,10 +256,9 @@ function applyFilters() {
 
   listElements.forEach((li, i) => {
     const s = data[i];
-
     const passAdhyay   = (!adhyay || s.adhyay == adhyay);
     const passBookmark = (!showBookmarked || bookmarked.has(i));
-    const passSearch   = (!q || (s._search || "").includes(q));  // precomputed key
+    const passSearch   = (!q || (s._search || "").includes(q));
 
     if (passAdhyay && passBookmark && passSearch) {
       ul.appendChild(li);
@@ -257,16 +267,57 @@ function applyFilters() {
 }
 
 
-// =============== RIGHT SIDEBAR (marked terms) ===============
+// =============== RIGHT SIDEBAR (tabs + list) ===============
+function buildMarkTabs(){
+  const sidebar = document.getElementById('markSidebar');
+  if (!sidebar) return;
+
+  let tabs = document.getElementById('markTabs');
+  if (!tabs){
+    tabs = document.createElement('div');
+    tabs.id = 'markTabs';
+    tabs.style.display = 'flex';
+    tabs.style.gap = '.5rem';
+    tabs.style.marginBottom = '.5rem';
+    tabs.style.flexWrap = 'wrap';
+    const h2 = sidebar.querySelector('h2');
+    if (h2 && h2.parentNode) h2.parentNode.insertBefore(tabs, h2);
+    else sidebar.insertBefore(tabs, sidebar.firstChild);
+  }
+
+  tabs.innerHTML = '';
+  TAGS.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'mark-tab-btn';
+    btn.textContent = tag.label;
+    btn.dataset.tag = tag.key;
+    btn.style.padding = '.35rem .6rem';
+    btn.style.border = '1px solid #cfd6de';
+    btn.style.borderRadius = '6px';
+    btn.style.background = (markState.activeTag === tag.key) ? '#e8f0fe' : '#fff';
+    btn.style.cursor = 'pointer';
+    btn.setAttribute('aria-selected', markState.activeTag === tag.key ? 'true' : 'false');
+    btn.onclick = () => {
+      markState.activeTag = tag.key;
+      buildMarkTabs();     // active style refresh
+      renderMarkSidebar(); // list refresh
+    };
+    tabs.appendChild(btn);
+  });
+}
+
 function renderMarkSidebar() {
   const ul = document.getElementById('markList');
   const countEl = document.getElementById('markSearchCount');
   if (!ul) return;
 
+  const active = markState.activeTag || 'b';
+  const source = termsByTag[active] || [];
+
   const q = normalizeNFC((markState.query || "").toLowerCase().trim());
   const filtered = q
-    ? terms.filter(t => normalizeNFC(t.label).toLowerCase().includes(q))
-    : terms;
+    ? source.filter(t => normalizeNFC(t.label).toLowerCase().includes(q))
+    : source;
 
   ul.innerHTML = '';
 
@@ -279,7 +330,6 @@ function renderMarkSidebar() {
       e.stopPropagation();
       currentIndex = t.sutraIdx;
       renderSutra(currentIndex);
-      // NEW: अगर right search में query है तो main में भी flash कर दो
       if (markState.query && markState.query.trim()) {
         setTimeout(() => flashSearchInMain(markState.query), 60);
       }
@@ -342,29 +392,29 @@ function toggleExclusive(idToShow) {
 // =============== UI WIRING (bind after DOMContentLoaded) ===============
 function wireUI(){
 
-  // LEFT sidebar search input (existing highlight + state update)
-  var input, filter, ul, li, i;
-  input = document.getElementById("searchInput");
+  // LEFT sidebar search input (always from plain dataset)
+  const input = document.getElementById("searchInput");
   if (input){
     input.addEventListener('input', function() {
-      // update state for main flashing
       leftSearchState.q = input.value || "";
 
-      filter = input.value.normalize("NFC").toUpperCase();
-      ul = document.getElementById("sutraList");
-      li = ul.getElementsByTagName("li");
-      for (i = 0; i < li.length; i++) {
-        let text = li[i].textContent.normalize("NFC");
-        let idx = text.toUpperCase().indexOf(filter);
+      const filter = input.value.normalize("NFC").toUpperCase();
+      const ul = document.getElementById("sutraList");
+      const li = ul.getElementsByTagName("li");
+
+      for (let i = 0; i < li.length; i++) {
+        const base = (li[i].dataset.baseLabel || li[i].textContent || "").normalize("NFC");
+        const idx = base.toUpperCase().indexOf(filter);
+
         if (idx > -1) {
           li[i].style.display = "";
-          let before = text.slice(0, idx);
-          let middle = text.slice(idx, idx + filter.length);
-          let after = text.slice(idx + filter.length);
+          const before = base.slice(0, idx);
+          const middle = base.slice(idx, idx + filter.length);
+          const after  = base.slice(idx + filter.length);
           li[i].innerHTML = `${before}<span class="chihnit">${middle}</span>${after}`;
         } else {
           li[i].style.display = "none";
-          li[i].innerHTML = text; 
+          li[i].textContent = base; // restore plain
         }
       }
     });
@@ -373,7 +423,6 @@ function wireUI(){
   // Filters wiring
   const adhyaySelect = document.getElementById('filterAdhyay');
   if (adhyaySelect) adhyaySelect.onchange = applyFilters;
-  else console.warn('[filter] #filterAdhyay नहीं मिला');
 
   const bookmarkedBtnEl = document.getElementById('filterBookmarked');
   if (bookmarkedBtnEl){
@@ -381,57 +430,75 @@ function wireUI(){
       this.classList.toggle('active');
       applyFilters();
     };
-  } else {
-    console.warn('[filter] #filterBookmarked नहीं मिला');
   }
 
   // RIGHT sidebar search input
   const markSearchInput = document.getElementById('markSearchInput');
   if (markSearchInput){
+    markState.query = ""; // init
     markSearchInput.addEventListener('input', debounce(e => {
       markState.query = e.target.value || "";
       renderMarkSidebar();
     }, 150));
   }
+
+  // Build right tabs initially
+  buildMarkTabs();
 }
 
 
 // =============== FETCH + PROCESS ===============
 document.addEventListener('DOMContentLoaded', () => {
-  wireUI();  // DOM elements are now available
+  wireUI();  // DOM ready
 
   fetch("data.json")
     .then(res => res.json())
     .then(json => {
-      data = json.niruktam.map((item, i) => {
-        // left-search key (raw JSON → plain, no HTML/anchors)
-        const rawText  = item.text || "";
-        const searchPlain = rawText.replace(/<[^>]*>/g, "")
-                                   .replace(/b(.*?)b/g, (_, p1)=> (p1||"").trim());
-        const searchKey = normalizeNFC((item.index + ': ' + searchPlain)).toLowerCase();
+      // reset buckets each load
+      TAGS.forEach(t => { termsByTag[t.key] = []; });
 
-        const t1 = markAndCollect(item.text,  i, 'text');
-        const t2 = markAndCollect(item.durg,  i, 'durg');
-        const t3 = markAndCollect(item.skand, i, 'skand');
-        terms.push(...t1.localTerms, ...t2.localTerms, ...t3.localTerms);
+      data = json.niruktam.map((item, i) => {
+        // Plain versions for LEFT labels/search (strip all tags + unwrap b/m/v)
+        const rawText  = item.text  || "";
+        const rawDurg  = item.durg  || "";
+        const rawSkand = item.skand || "";
+
+        const stripAll = s => (s || "")
+          .replace(/<[^>]*>/g, "")
+          .replace(/b(.*?)b/g, (_, p1)=> (p1||"").trim())
+          .replace(/m(.*?)m/g, (_, p1)=> (p1||"").trim())
+          .replace(/v(.*?)v/g, (_, p1)=> (p1||"").trim());
+
+        const text_plain  = stripAll(rawText);
+        const durg_plain  = stripAll(rawDurg);
+        const skand_plain = stripAll(rawSkand);
+
+        // Left search key from plain text
+        const searchKey = normalizeNFC((item.index + ': ' + text_plain)).toLowerCase();
+
+        // Main HTML with anchors for ALL configured tags (single-pass)
+        const pText  = processAllTags(item.text,  i, 'text');
+        const pDurg  = processAllTags(item.durg,  i, 'durg');
+        const pSkand = processAllTags(item.skand, i, 'skand');
 
         return {
           ...item,
-          text:  t1.html,
-          durg:  t2.html,
-          skand: t3.html,
+          text:  pText.html,
+          durg:  pDurg.html,
+          skand: pSkand.html,
+          text_plain,
+          durg_plain,
+          skand_plain,
           _search: searchKey
         };
       });
 
-      // Build list items once
+      // Left list + filters
       populateSidebar();
       updateFilters();
-
-      // Render left list according to current filters + search
       applyFilters();
 
-      // Render main + right sidebar
+      // Main + Right side
       renderSutra(currentIndex);
       renderMarkSidebar();
 

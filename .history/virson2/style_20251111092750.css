@@ -1,0 +1,303 @@
+/* ------------- Fonts ------------- */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&display=swap');
+
+/* ------------- Base ------------- */
+html::-webkit-scrollbar { display: none; }
+body, main, .sutra {
+  font-family: 'Noto Serif Devanagari', 'Sanskrit Text', serif;
+}
+body {
+  margin: 0;
+  overflow: auto;               /* allow page scroll */
+  scrollbar-width: none;        /* Firefox hide scrollbar */
+}
+
+/* ------------- Header ------------- */
+#header {
+  background-color: #b4601b;
+  height: 60px;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+aside:not(#markSidebar) {
+  width: 300px;
+  overflow-y: auto;
+  background: #f7f9fb;
+  border-right: 1px solid #ccc;
+  padding: 1rem;
+  transition: transform 0.3s ease-in-out;
+  position: fixed;
+  top: 55px;
+  left: 0;
+  z-index: 3;
+  height: 100vh;
+  scroll-behavior: smooth;
+}
+aside:not(#markSidebar) h2 {
+  margin-top: 0;
+  color: #244a6e;
+}
+#searchInput, #filterAdhyay, #filterPaad, #filterBookmarked {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  padding: 0.4rem;
+}
+#searchInput { width: 94%; }
+aside:not(#markSidebar) ul { list-style: none; padding: 0; }
+aside:not(#markSidebar) li {
+  padding: 0.5rem;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+aside:not(#markSidebar) li:hover,
+aside:not(#markSidebar) li.active {
+  background-color: #fdf8ee;
+}
+
+/* ------------- Right Sidebar (marked terms) ------------- */
+#markSidebar{
+  width: 300px;
+  overflow-y: auto;
+  background: #f7f9fb;
+  border-left: 1px solid #ccc;
+  padding: 1rem;
+  position: fixed;
+  top: 55px;
+  right: 0;
+  height: 100vh;
+  z-index: 3;
+}
+#markSidebar h2{
+  margin-top: 0;
+  color: #244a6e;
+}
+.markSearch{
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  margin-bottom: .75rem;
+}
+#markSearchInput{
+  flex: 1;
+  padding: .5rem .6rem;
+  border: 1px solid #cfd6de;
+  border-radius: .5rem;
+  outline: none;
+}
+#markSearchInput:focus{
+  border-color: #7aa7d7;
+  box-shadow: 0 0 0 2px rgba(122,167,215,.15);
+}
+#markSearchCount{
+  font-size: .85rem;
+  color: #5b6b7c;
+  white-space: nowrap;
+}
+#markList{
+  list-style: none;
+  margin: 0; padding: 0;
+}
+#markList li{
+  padding: .45rem .25rem;
+  border-bottom: 1px solid #e6ecf2;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#markList li:hover{ background:#eef4fa; }
+/* highlight tag (either <mark> or your custom span.mk) */
+#markList mark,
+#markList .mark,
+#markList .mk {
+  background: #ffef8a;
+  padding: 0 .1rem;
+  border-radius: .2rem;
+}
+
+/* ------------- Main Content ------------- */
+main{
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  /* दोनों sidebars की जगह छोड़ो */
+  margin-left: 350px;
+  margin-right: 350px;
+  margin-top: 30px;
+}
+.sutra h2 {
+  margin-top: 0;
+  background-color: #fff8dc;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  color: #5b4200;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-style: italic;
+  line-height: 1.6;
+}
+.meta, .section { margin-top: 1rem; }
+.meta {
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #5b4200;
+  font-style: italic;
+  line-height: .6;
+  display: block;
+  text-align: center;
+}
+#sutra_display {
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Sanskrit', 'Mukta', serif;
+  font-size: 1.5rem;
+  line-height: 2.2rem;
+  color: #4b2e05;
+}
+.section {
+  padding: .5rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  color: #3e2e00;
+  line-height: 1.7;
+}
+.section strong {
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #7a5200;
+  font-size: 1.2rem;
+  padding: 0 20px;
+  border-radius: 20px;
+}
+.bookmark { background-color: #ffe680; }
+.mantr { color: #a63f00; }
+
+/* ------------- Buttons, Toggles, Tips ------------- */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 10px; left: 10px;
+  background: #7a5200;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  z-index: 1000;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.toggle-content { display: none; margin-top: 0.5rem; border-radius: 6px; background: bottom; }
+.toggle-btn {
+  background-color: #ffffff;
+  color: #a63f00;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  transition: background-color 0.9s ease;
+}
+#tipsBox {
+  margin: auto;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #e6f2ff;
+  border: 1px solid #a0c6ff;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-style: italic;
+  color: #003366;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  z-index: 9999;
+}
+
+/* ------------- Anchor flash on jump ------------- */
+.mark-anchor.flash { animation: flashBg 1.2s ease-out 1; }
+@keyframes flashBg {
+  0% { background: #fffa9e; }
+  100% { background: transparent; }
+}
+
+/* ------------- Mobile ------------- */
+@media (max-width: 768px){
+  body { flex-direction: column; }
+  /* Left sidebar slides in/out */
+  aside:not(#markSidebar) {
+    position: absolute;
+    top: 55px; left: 0;
+    height: 100vh; width: 250px;
+    transform: translateX(-100%);
+    z-index: 0;
+  }
+  aside:not(#markSidebar).open { transform: translateX(0); }
+  /* Right sidebar hidden on mobile by default */
+  #markSidebar { display: none; }
+  /* Main gets normal margins on mobile */
+  main {
+    padding: 1rem;
+    margin: 50px 5px 0 5px;   /* top right bottom left */
+  }
+}
+
+/* ------------- Sutra nav buttons ------------- */
+.sutra-btn {
+  margin: 20px auto;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+}
+.sutra-btn button {
+  margin: 10px;
+  color: #e35353;
+  padding: 5px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #0000; /* transparent */
+}
+.sutra-btn button:hover {
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+.sutra-btn button:active {
+  background-color: #f9af5b;
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+#filterBookmarked { cursor: pointer; }
+.chihnit{
+  color: #d20000;
+  background-color: #eaff00;
+}
+
+.main-flash { background:#ffef8a; border-radius:3px; transition:background 1.2s ease; animation: mainFlash 1.2s ease-out 1; }
+@keyframes mainFlash { 0%{background:#ffef8a;} 100%{background:transparent;} }
+#markTabs .mark-tab-btn { background:#fff; }
+#markTabs .mark-tab-btn[aria-selected="true"],
+#markTabs .mark-tab-btn.active { background:#e8f0fe; border-color:#9bb3e7; }
+
+/* =============== /END OF FILE/ =============== */

@@ -296,3 +296,8 @@ main{
 
 .main-flash { background:#ffef8a; border-radius:3px; transition:background 1.2s ease; animation: mainFlash 1.2s ease-out 1; }
 @keyframes mainFlash { 0%{background:#ffef8a;} 100%{background:transparent;} }
+#markTabs .mark-tab-btn { background:#fff; }
+#markTabs .mark-tab-btn[aria-selected="true"],
+#markTabs .mark-tab-btn.active { background:#e8f0fe; border-color:#9bb3e7; }
+
+/* =============== /END OF FILE/ =============== */
