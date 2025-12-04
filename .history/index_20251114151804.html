@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="sa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>निरुक्तम्(1.1)</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&family=Mukta&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+  </head>
+<body>
+  <div class="loader" id="loader"></div>
+  <div id="header">
+    <span>निरुक्तम्</span> 
+  </div>
+  <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+  <aside id="sidebar">
+    <h2>पाठ-सूची</h2>
+    <input id="searchInput" oninput="leftSearch()" type="text" placeholder="पाठ खोजें...">
+    <select id="filterAdhyay" name="selector"><option value=""></option></select>
+    <button id="filterBookmarked">📚 केवल बुकमार्क</button>
+       <ul id="sutraList"></ul>
+  </aside>
+
+
+  <div id="tipsBox"></div>
+  <main onclick="toggleSidebar(true)">
+    <div id="sutraContent"></div>
+  </main>
+
+   <aside id="markSidebar">
+  <h2>निर्वचनादि-सूची</h2>
+
+  <div class="markSearch">
+    <input id="markSearchInput" type="search" placeholder="शब्द खोजें..." />
+    <span id="markSearchCount"></span>
+  </div>
+
+  <ul id="markList"></ul>
+</aside>
+
+
+ <script src="script.js" defer></script>
+</body>
+</html>

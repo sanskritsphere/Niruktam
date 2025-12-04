@@ -4,9 +4,10 @@ let currentIndex = 0;
 let listElements = [];
 
 const TAGS = [
-  { key: 'b', label: 'निर्वचन' },  // b(.*?)b
-  { key: 'm', label: 'मन्त्र' },   // m(.*?)m
-  { key: 'v', label: 'विशेष' }     // v(.*?)v
+  { key: '#b', label: 'निर्वचन' },  // #b(.*?)b#
+  { key: '#m', label: 'मन्त्र' },   // #m(.*?)m#
+  { key: '#v', label: 'विशेष' }, // #v(.*?)v#
+  { key: '#s', label: 'श्लोक'}   // #s(.*?)s#
 ];
 
 const termsByTag = {};               // { b:[], m:[], v:[] }
@@ -185,12 +186,16 @@ function renderSutra(index) {
       </div>
       
       <div class="section">
-        <button class="toggle-btn" onclick="toggleExclusive('durg')">दुर्गटीका</button>
+        <button class="toggle-btn" onclick="toggleExclusive('durg')">दुर्गवृत्तिः</button>
         <div id="durg" class="toggle-content"><hr>${highlightDoubts(sutra.durg, doubtTexts)}</div>
       </div>
       <div class="section">
-        <button class="toggle-btn" onclick="toggleExclusive('skand')">स्कन्दटीका</button>
+        <button class="toggle-btn" onclick="toggleExclusive('skand')">निरुक्तभाष्यटीका(श्रीस्कन्दस्वामी)</button>
         <div id="skand" class="toggle-content"><hr>${highlightDoubts(sutra.skand, doubtTexts)}</div>
+      </div>
+       <div class="section">
+        <button class="toggle-btn" onclick="toggleExclusive('vivaran')">THE NIRUKTA</button>
+        <div id="vivaran" class="toggle-content"><hr>${highlightDoubts(sutra.vivaran, doubtTexts)}</div>
       </div>
       <button class="add-remove-bookmark" onclick="toggleBookmark(${index})">
         ${bookmarked.has(index) ? '🔖 बुकमार्क हटाएं' : '📌 बुकमार्क करें'}
@@ -381,7 +386,7 @@ function toggleSidebar(forceClose = null) {
 }
 
 function toggleExclusive(idToShow) {
-  ['durg', 'skand'].forEach(id => {
+  ['durg', 'skand', 'vivaran'].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     el.style.display = id === idToShow && el.style.display !== 'block' ? 'block' : 'none';
@@ -462,16 +467,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const rawText  = item.text  || "";
         const rawDurg  = item.durg  || "";
         const rawSkand = item.skand || "";
+        const rawVivaran = item.vivaran || "";
 
         const stripAll = s => (s || "")
-          .replace(/<[^>]*>/g, "")
-          .replace(/b(.*?)b/g, (_, p1)=> (p1||"").trim())
-          .replace(/m(.*?)m/g, (_, p1)=> (p1||"").trim())
-          .replace(/v(.*?)v/g, (_, p1)=> (p1||"").trim());
+  .replace(/<[^>]*>/g, "")
+  .replace(/#b([\s\S]*?)#b/g, (_, p1)=> (p1||"").trim())
+  .replace(/#m([\s\S]*?)#m/g, (_, p1)=> (p1||"").trim())
+  .replace(/#v([\s\S]*?)#v/g, (_, p1)=> (p1||"").trim())
+  .replace(/#s([\s\S]*?)#s/g, (_, p1)=> (p1||"").trim());
 
         const text_plain  = stripAll(rawText);
         const durg_plain  = stripAll(rawDurg);
         const skand_plain = stripAll(rawSkand);
+        const vivaran_plain = stripAll(rawVivaran);
 
         // Left search key from plain text
         const searchKey = normalizeNFC((item.index + ': ' + text_plain)).toLowerCase();
@@ -480,15 +488,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const pText  = processAllTags(item.text,  i, 'text');
         const pDurg  = processAllTags(item.durg,  i, 'durg');
         const pSkand = processAllTags(item.skand, i, 'skand');
+        const pVivaran = processAllTags(item.vivaran, i, 'vivaran');
 
         return {
           ...item,
           text:  pText.html,
           durg:  pDurg.html,
           skand: pSkand.html,
+          vivaran: pVivaran.html,
           text_plain,
           durg_plain,
           skand_plain,
+          vivaran_plain,
           _search: searchKey
         };
       });

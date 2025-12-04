@@ -204,15 +204,17 @@ main{
 }
 .toggle-content { display: none; margin-top: 0.5rem; border-radius: 6px; background: bottom; }
 .toggle-btn {
-  background-color: #ffffff;
+  background-color: #ffe4e4;
   color: #a63f00;
   border: none;
   border-radius: 12px;
   padding: 10px 20px;
   font-weight: bold;
   cursor: pointer;
-  margin-bottom: 0.5rem;
-  display: inline-block;
+  margin-bottom: 0.1rem;
+  display: block;
+  width: 100%;
+  text-align: left;
   transition: background-color 0.9s ease;
 }
 #tipsBox {

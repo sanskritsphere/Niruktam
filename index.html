@@ -11,14 +11,14 @@
 <body>
   <div class="loader" id="loader"></div>
   <div id="header">
-    <span>निरुक्तम्</span>
+    <span>निरुक्तम्</span> 
   </div>
   <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
 
   <aside id="sidebar">
-    <h2>पाठसूची</h2>
+    <h2>पाठ-सूची</h2>
     <input id="searchInput" oninput="leftSearch()" type="text" placeholder="पाठ खोजें...">
-    <select id="filterAdhyay"><option value="">अध्यायं चिनुयात्</option></select>
+    <select id="filterAdhyay" name="selector"><option value=""></option></select>
     <button id="filterBookmarked">📚 केवल बुकमार्क</button>
        <ul id="sutraList"></ul>
   </aside>
