@@ -11,7 +11,7 @@ const customVyakhya = [
   },
   {
     "shabda": "निघण्टवः",
-    "vyakaran": "नि + <a target='blank' href='https://ashtadhyayi.com/dhatu?search=gam'>गम्</a> + तु / नि+घटि (भाषार्थे)+णिच् 'कुः' (उ० १-३७),",
+    "vyakaran": "नि + <a target='blank' href='https://ashtadhyayi.com/dhatu?search=gam'>गम्</a> + तु / नि+<a target='blank' href='https://ashtadhyayi.com/dhatu?search=ghaTi'>घटि (भाषार्थे)</a>+णिच् 'कुः' (उ० १-३७),",
     "vyakhya": "अर्थान् निघण्टयत्यस्मान्निघण्टुः परिकीर्तितः",
     "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%B8%E0%A4%AE%E0%A4%BE%E0%A4%AE%E0%A5%8D%E0%A4%A8%E0%A4%BE%E0%A4%AF%E0%A4%83'>कोशे पश्य</a>"
 
@@ -25,21 +25,21 @@ const customVyakhya = [
   },
   {
     "shabda": "यद्वा समाहृता भवन्ति",
-    "vyakaran": "नि + <a target='blank' href='https://ashtadhyayi.com/dhatu?search=gam'>हृ",
+    "vyakaran": "नि + <a target='blank' href='https://ashtadhyayi.com/dhatu?search=%E0%A4%B9%E0%A5%83'>हृ</a>",
     "vyakhya": "छन्दों से शब्दों के संग्रह के कारण निघण्टु नामकरण का दूसरा मत।",
     "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%B8%E0%A4%AE%E0%A4%BE%E0%A4%AE%E0%A5%8D%E0%A4%A8%E0%A4%BE%E0%A4%AF%E0%A4%83'>कोशे पश्य</a>"
 
   },
   {
     "shabda": "आख्यातम्",
-    "vyakaran": "आ + ख्या + क्त",
+    "vyakaran": "आ + <a target='blank' href='https://ashtadhyayi.com/dhatu?search=khyaa'>ख्या</a> + क्त",
     "vyakhya": "जिस पद में क्रिया या भाव की प्रधानता हो, वह आख्यात कहलाता है।",
     "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%86%E0%A4%96%E0%A5%8D%E0%A4%AF%E0%A4%BE%E0%A4%A4'>कोशे पश्य</a>"
 
   },
   {
     "shabda": "नामानि",
-    "vyakaran": "नम् + मनिन् (नामन्सीमन् इति <a target='blank' href='https://ashtadhyayi.com/unaadi?search=%E0%A4%A8%E0%A4%BE%E0%A4%AE%E0%A4%A8%E0%A5%8D'उणादौ</a> प्रतिपादितम्)",
+    "vyakaran": "<a target='blank' href='https://ashtadhyayi.com/dhatu?search=nam'>नम्</a> + मनिन् (नामन्सीमन् इति <a target='blank' href='https://ashtadhyayi.com/unaadi?search=%E0%A4%A8%E0%A4%BE%E0%A4%AE%E0%A4%A8%E0%A5%8D'उणादौ</a> प्रतिपादितम्)",
     "vyakhya": "जिस पद में द्रव्य या वस्तु का बोध प्रधान हो, वह नामपद होता है।",
      "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%A8%E0%A4%BE%E0%A4%AE%E0%A4%A8%E0%A5%8D'>कोशे पश्य</a>"
 
@@ -658,7 +658,7 @@ function showVyakhya(anchorId) {
     <p><strong>विस्तरं </strong> ${customEntry.link}</p>
     <hr style="margin:10px 0; border-color:#a0785a;">
     <div style="font-size:1.1rem; line-height:1.9; padding:8px 0;">
-      <strong>व्याख्या:</strong><br>
+      <strong>अर्थ (हिन्दी)</strong><br>
       ${customEntry.vyakhya}
     </div>
   `;
