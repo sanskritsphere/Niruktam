@@ -668,3 +668,67 @@ function closeVyakhya() {
   const panel = document.getElementById('vyakhya');
   if (panel) panel.classList.remove('open');
 }
+
+// =============== VYAKHYA PANEL DRAGGABLE ===============
+let isDragging = false;
+let currentX;
+let currentY;
+let initialX;
+let initialY;
+let xOffset = 0;
+let yOffset = 0;
+
+const dragHandle = document.getElementById('vyakhyaDragHandle');
+const panel = document.getElementById('vyakhya');
+
+if (dragHandle && panel) {
+  dragHandle.addEventListener('mousedown', dragStart);
+  document.addEventListener('mousemove', dragMove);
+  document.addEventListener('mouseup', dragEnd);
+
+  // Touch devices के लिए भी support (mobile/tablet)
+  dragHandle.addEventListener('touchstart', dragStart);
+  document.addEventListener('touchmove', dragMove);
+  document.addEventListener('touchend', dragEnd);
+}
+
+function dragStart(e) {
+  if (e.type === "touchstart") {
+    initialX = e.touches[0].clientX - xOffset;
+    initialY = e.touches[0].clientY - yOffset;
+  } else {
+    initialX = e.clientX - xOffset;
+    initialY = e.clientY - yOffset;
+  }
+
+  if (e.target === dragHandle || dragHandle.contains(e.target)) {
+    isDragging = true;
+  }
+}
+
+function dragMove(e) {
+  if (isDragging) {
+    e.preventDefault();
+
+    if (e.type === "touchmove") {
+      currentX = e.touches[0].clientX - initialX;
+      currentY = e.touches[0].clientY - initialY;
+    } else {
+      currentX = e.clientX - initialX;
+      currentY = e.clientY - initialY;
+    }
+
+    xOffset = currentX;
+    yOffset = currentY;
+
+    panel.style.transform = `translate(${currentX}px, ${currentY}px)`;
+    panel.style.bottom = 'auto';
+    panel.style.right = 'auto';
+  }
+}
+
+function dragEnd(e) {
+  initialX = currentX;
+  initialY = currentY;
+  isDragging = false;
+}

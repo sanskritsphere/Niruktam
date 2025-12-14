@@ -319,6 +319,8 @@ main{
   z-index: 1000;
   overflow: hidden;
   font-family: 'Noto Serif Devanagari', serif;
+  /* Draggable के लिए जरूरी */
+  user-select: none; /* text select न हो drag करते समय */
 }
 
 .vyakhya-panel.open {
@@ -333,6 +335,7 @@ main{
   align-items: center;
   border-bottom: 1px solid #ddd;
   font-weight: bold;
+  cursor: move; /* माउस पॉइंटर दिखाएगा कि draggable है */
 }
 
 #vyakhya-content {
