@@ -204,15 +204,17 @@ main{
 }
 .toggle-content { display: none; margin-top: 0.5rem; border-radius: 6px; background: bottom; }
 .toggle-btn {
-  background-color: #ffffff;
+  background-color: #ffe4e4;
   color: #a63f00;
   border: none;
   border-radius: 12px;
   padding: 10px 20px;
   font-weight: bold;
   cursor: pointer;
-  margin-bottom: 0.5rem;
-  display: inline-block;
+  margin-bottom: 0.1rem;
+  display: block;
+  width: 100%;
+  text-align: left;
   transition: background-color 0.9s ease;
 }
 #tipsBox {
@@ -292,4 +294,64 @@ main{
 .chihnit{
   color: #d20000;
   background-color: #eaff00;
+}
+
+.main-flash { background:#ffef8a; border-radius:3px; transition:background 1.2s ease; animation: mainFlash 1.2s ease-out 1; }
+@keyframes mainFlash { 0%{background:#ffef8a;} 100%{background:transparent;} }
+#markTabs .mark-tab-btn { background:#fff; }
+#markTabs .mark-tab-btn[aria-selected="true"],
+#markTabs .mark-tab-btn.active { background:#e8f0fe; border-color:#9bb3e7; }
+
+/* =============== /END OF FILE/ =============== */
+
+.vyakhya-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 420px;
+  max-height: 70vh;
+  background: #fff;
+  border: 2px solid #a0785a;
+  border-radius: 10px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  overflow: hidden;
+  font-family: 'Noto Serif Devanagari', serif;
+}
+
+.vyakhya-panel.open {
+  display: flex;
+}
+
+.vyakhya-header {
+  padding: 10px 15px;
+  background: #f5e6d3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold;
+}
+
+#vyakhya-content {
+  padding: 15px;
+  overflow-y: auto;
+  line-height: 1.8;
+  font-size: 1.05rem;
+  background: #fffff8;
+}
+
+#vyakhya-content strong {
+  color: #b56;
+}
+
+#vyakhya-content strong {
+  color: #8b4513;
+  font-size: 1.05rem;
+}
+
+#vyakhya-content hr {
+  border-color: #d4af37;
 }

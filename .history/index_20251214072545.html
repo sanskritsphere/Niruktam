@@ -11,12 +11,12 @@
 <body>
   <div class="loader" id="loader"></div>
   <div id="header">
-    <span>निरुक्तम्</span>
+    <span>निरुक्तम्</span> 
   </div>
   <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
 
   <aside id="sidebar">
-    <h2>पाठसूची</h2>
+    <h2>पाठ-सूची</h2>
     <input id="searchInput" oninput="leftSearch()" type="text" placeholder="पाठ खोजें...">
     <select id="filterAdhyay" name="selector"><option value=""></option></select>
     <button id="filterBookmarked">📚 केवल बुकमार्क</button>
@@ -40,6 +40,14 @@
   <ul id="markList"></ul>
 </aside>
 
+<!-- =================== -->
+ <div id="vyakhya" class="vyakhya-panel">
+  <div class="vyakhya-header">
+    <span id="vyakhya-title">व्याख्या</span>
+    <button onclick="closeVyakhya()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;">✖</button>
+  </div>
+  <div id="vyakhya-content"></div>
+</div>
 
  <script src="script.js" defer></script>
 </body>

@@ -44,7 +44,7 @@ aside:not(#markSidebar) {
 }
 aside:not(#markSidebar) h2 {
   margin-top: 0;
-  color: #7a5200;
+  color: #244a6e;
 }
 #searchInput, #filterAdhyay, #filterPaad, #filterBookmarked {
   width: 100%;
@@ -204,15 +204,17 @@ main{
 }
 .toggle-content { display: none; margin-top: 0.5rem; border-radius: 6px; background: bottom; }
 .toggle-btn {
-  background-color: #ffffff;
+  background-color: #ffe4e4;
   color: #a63f00;
   border: none;
   border-radius: 12px;
   padding: 10px 20px;
   font-weight: bold;
   cursor: pointer;
-  margin-bottom: 0.5rem;
-  display: inline-block;
+  margin-bottom: 0.1rem;
+  display: block;
+  width: 100%;
+  text-align: left;
   transition: background-color 0.9s ease;
 }
 #tipsBox {
@@ -293,3 +295,11 @@ main{
   color: #d20000;
   background-color: #eaff00;
 }
+
+.main-flash { background:#ffef8a; border-radius:3px; transition:background 1.2s ease; animation: mainFlash 1.2s ease-out 1; }
+@keyframes mainFlash { 0%{background:#ffef8a;} 100%{background:transparent;} }
+#markTabs .mark-tab-btn { background:#fff; }
+#markTabs .mark-tab-btn[aria-selected="true"],
+#markTabs .mark-tab-btn.active { background:#e8f0fe; border-color:#9bb3e7; }
+
+/* =============== /END OF FILE/ =============== */

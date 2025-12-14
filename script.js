@@ -1,4 +1,54 @@
 // =============== STATE ===============
+// =============== CUSTOM VYAKHYA DATA ===============
+// =============== CUSTOM VYAKHYA DATA (केवल meaning class वाले) ===============
+const customVyakhya = [
+  {
+    
+    "shabda": "समाम्नायः",
+    "vyakaran": "निष्पत्तिः- सम् + आ + <a target='blank' href='https://ashtadhyayi.com/dhatu/01.1078?tab=&upasarga=sam%3BAN'>म्ना (अभ्यासे)</a>'घञ्' (३-३-१८) । 'युक्' (७-३-३३)",
+    "vyakhya": "सम्यक् आम्नातः शास्त्रीय शब्दसमूहः, जो परम्परया गुरु-शिष्यक्रमेण प्राप्त होता है।",
+    "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%B8%E0%A4%AE%E0%A4%BE%E0%A4%AE%E0%A5%8D%E0%A4%A8%E0%A4%BE%E0%A4%AF%E0%A4%83'>कोशे पश्य</a>"
+  },
+  {
+    "shabda": "निघण्टवः",
+    "vyakaran": "नि + <a target='blank' href='https://ashtadhyayi.com/dhatu?search=gam'>गम्</a> + तु / नि+घटि (भाषार्थे)+णिच् 'कुः' (उ० १-३७),",
+    "vyakhya": "अर्थान् निघण्टयत्यस्मान्निघण्टुः परिकीर्तितः",
+    "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%B8%E0%A4%AE%E0%A4%BE%E0%A4%AE%E0%A5%8D%E0%A4%A8%E0%A4%BE%E0%A4%AF%E0%A4%83'>कोशे पश्य</a>"
+
+  },
+  {
+    "shabda": "अपि वा हननादेव स्युः",
+    "vyakaran": "नि + <a target='blank' href='https://ashtadhyayi.com/dhatu?search=han'>हन्</a> + तु",
+    "vyakhya": "हन धातु से निष्पत्ति का विकल्पात्मक मत, समाहार-अर्थ के कारण।",
+    "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%B8%E0%A4%AE%E0%A4%BE%E0%A4%AE%E0%A5%8D%E0%A4%A8%E0%A4%BE%E0%A4%AF%E0%A4%83'>कोशे पश्य</a>"
+
+  },
+  {
+    "shabda": "यद्वा समाहृता भवन्ति",
+    "vyakaran": "नि + <a target='blank' href='https://ashtadhyayi.com/dhatu?search=gam'>हृ",
+    "vyakhya": "छन्दों से शब्दों के संग्रह के कारण निघण्टु नामकरण का दूसरा मत।",
+    "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%B8%E0%A4%AE%E0%A4%BE%E0%A4%AE%E0%A5%8D%E0%A4%A8%E0%A4%BE%E0%A4%AF%E0%A4%83'>कोशे पश्य</a>"
+
+  },
+  {
+    "shabda": "आख्यातम्",
+    "vyakaran": "आ + ख्या + क्त",
+    "vyakhya": "जिस पद में क्रिया या भाव की प्रधानता हो, वह आख्यात कहलाता है।",
+    "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%86%E0%A4%96%E0%A5%8D%E0%A4%AF%E0%A4%BE%E0%A4%A4'>कोशे पश्य</a>"
+
+  },
+  {
+    "shabda": "नामानि",
+    "vyakaran": "नम् + मनिन् (नामन्सीमन् इति <a target='blank' href='https://ashtadhyayi.com/unaadi?search=%E0%A4%A8%E0%A4%BE%E0%A4%AE%E0%A4%A8%E0%A5%8D'उणादौ</a> प्रतिपादितम्)",
+    "vyakhya": "जिस पद में द्रव्य या वस्तु का बोध प्रधान हो, वह नामपद होता है।",
+     "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%A8%E0%A4%BE%E0%A4%AE%E0%A4%A8%E0%A5%8D'>कोशे पश्य</a>"
+
+  }
+];
+// Normalisation helper for matching (Devanagari NFC + trim)
+function normalizeShabda(s) {
+  return (s || "").normalize("NFC").trim();
+}
 let data = [];
 let currentIndex = 0;
 let listElements = [];
@@ -203,6 +253,46 @@ function renderSutra(index) {
       <br><br><br><br>
     </div>
   `;
+
+      // केवल meaning class वाले निर्वचन शब्द clickable बनाओ
+  container.querySelectorAll('.mark-anchor').forEach(anchor => {
+    const anchorId = anchor.id;
+
+    // term ढूंढो
+    let foundTerm = null;
+    for (const tagKey in termsByTag) {
+      foundTerm = termsByTag[tagKey].find(t => t.id === anchorId);
+      if (foundTerm) break;
+    }
+
+    if (!foundTerm) {
+      anchor.style.cursor = 'default';
+      return;
+    }
+
+    const normalizedLabel = normalizeShabda(foundTerm.label);
+
+    // customVyakhya में match करे?
+    const hasCustom = customVyakhya.some(entry => 
+      normalizeShabda(entry.shabda) === normalizedLabel
+    );
+
+    if (hasCustom) {
+      // यह meaning class वाला है → clickable
+      anchor.style.cursor = 'pointer';
+      anchor.title = 'व्याख्या देखने के लिए क्लिक करें';
+      anchor.classList.add('meaning'); // वैकल्पिक: CSS में अलग स्टाइल के लिए
+      anchor.onclick = (e) => {
+        e.stopPropagation();
+        showVyakhya(anchorId);
+      };
+    } else {
+      // meaning class में नहीं → non-clickable
+      anchor.style.cursor = 'default';
+      anchor.title = '';
+      anchor.onclick = null;
+    }
+  });
 
   listElements.forEach((el, i) => {
     el.classList.toggle('active', i === index);
@@ -523,3 +613,59 @@ document.addEventListener('DOMContentLoaded', () => {
       if (loader) loader.style.display = 'none';
     });
 });
+
+
+// ======================================
+function showVyakhya(anchorId) {
+  const panel = document.getElementById('vyakhya');
+  const contentEl = document.getElementById('vyakhya-content');
+  const titleEl = document.getElementById('vyakhya-title');
+  if (!panel || !contentEl || !titleEl) return;
+
+  let foundTerm = null;
+  for (const tagKey in termsByTag) {
+    foundTerm = termsByTag[tagKey].find(t => t.id === anchorId);
+    if (foundTerm) break;
+  }
+
+  if (!foundTerm) {
+    return; // कोई term नहीं मिला → कुछ मत करो
+  }
+
+  const sutra = data[foundTerm.sutraIdx];
+  if (!sutra) return;
+
+  const normalizedLabel = normalizeShabda(foundTerm.label);
+
+  // केवल custom व्याख्या ढूंढो
+  const customEntry = customVyakhya.find(entry => 
+    normalizeShabda(entry.shabda) === normalizedLabel
+  );
+
+  // अगर custom व्याख्या नहीं मिली → panel बिल्कुल न खोलो
+  if (!customEntry) {
+    return;
+  }
+
+  // custom व्याख्या मिल गई → panel खोलो
+  const tagLabel = TAGS.find(t => t.key === foundTerm.tag)?.label || foundTerm.tag;
+
+  titleEl.textContent = `व्याख्या: ${foundTerm.label}`;
+
+  contentEl.innerHTML = `
+    <p><strong>शब्द:</strong> ${foundTerm.label}</p>
+    <p><strong>निष्पत्तिः</strong> ${customEntry.vyakaran}</p>
+    <p><strong>विस्तरं </strong> ${customEntry.link}</p>
+    <hr style="margin:10px 0; border-color:#a0785a;">
+    <div style="font-size:1.1rem; line-height:1.9; padding:8px 0;">
+      <strong>व्याख्या:</strong><br>
+      ${customEntry.vyakhya}
+    </div>
+  `;
+
+  panel.classList.add('open');
+}
+function closeVyakhya() {
+  const panel = document.getElementById('vyakhya');
+  if (panel) panel.classList.remove('open');
+}

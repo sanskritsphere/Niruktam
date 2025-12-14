@@ -1,12 +1,45 @@
 // =============== STATE ===============
+// =============== CUSTOM VYAKHYA DATA ===============
+// =============== CUSTOM VYAKHYA DATA (केवल meaning class वाले) ===============
+const customVyakhya = [
+  {
+    "shabda": "समाम्नायः",
+    "vyakhya": "सम्यक् आम्नातः शास्त्रीय शब्दसमूहः, जो परम्परया गुरु-शिष्यक्रमेण प्राप्त होता है।"
+  },
+  {
+    "shabda": "निघण्टवः कस्मात्",
+    "vyakhya": "निघण्टु शब्द की उत्पत्ति के कारण की जिज्ञासा।"
+  },
+  {
+    "shabda": "अपि वा हननादेव स्युः",
+    "vyakhya": "हन धातु से निष्पत्ति का विकल्पात्मक मत, समाहार-अर्थ के कारण।"
+  },
+  {
+    "shabda": "यद्वा समाहृता भवन्ति",
+    "vyakhya": "छन्दों से शब्दों के संग्रह के कारण निघण्टु नामकरण का दूसरा मत।"
+  },
+  {
+    "shabda": "भावप्रधानमाख्यातम्",
+    "vyakhya": "जिस पद में क्रिया या भाव की प्रधानता हो, वह आख्यात कहलाता है।"
+  },
+  {
+    "shabda": "सत्त्वप्रधानानि नामानि",
+    "vyakhya": "जिस पद में द्रव्य या वस्तु का बोध प्रधान हो, वह नामपद होता है।"
+  }
+];
+// Normalisation helper for matching (Devanagari NFC + trim)
+function normalizeShabda(s) {
+  return (s || "").normalize("NFC").trim();
+}
 let data = [];
 let currentIndex = 0;
 let listElements = [];
 
 const TAGS = [
-  { key: 'b', label: 'निर्वचन' },  // b(.*?)b
-  { key: 'm', label: 'मन्त्र' },   // m(.*?)m
-  { key: 'v', label: 'विशेष' }     // v(.*?)v
+  { key: '#b', label: 'निर्वचन' },  // #b(.*?)b#
+  { key: '#m', label: 'मन्त्र' },   // #m(.*?)m#
+  { key: '#v', label: 'विशेष' }, // #v(.*?)v#
+  { key: '#s', label: 'श्लोक'}   // #s(.*?)s#
 ];
 
 const termsByTag = {};               // { b:[], m:[], v:[] }
@@ -161,23 +194,6 @@ function processAllTags(str, sutraIdx, field){
   return { html };
 }
 
-/* ========= MOBILE SIDEBAR TOGGLES ========= */
-function toggleLeftSidebar(force){
-  const el = document.getElementById('sidebar');
-  if (!el) return;
-  if (force === true) el.classList.add('open');
-  else if (force === false) el.classList.remove('open');
-  else el.classList.toggle('open');
-}
-
-function toggleRightSidebar(force){
-  const el = document.getElementById('markSidebar');
-  if (!el) return;
-  if (force === true) el.classList.add('open');
-  else if (force === false) el.classList.remove('open');
-  else el.classList.toggle('open');
-}
-
 
 // =============== RENDER: MAIN PANEL ===============
 function renderSutra(index) {
@@ -202,12 +218,16 @@ function renderSutra(index) {
       </div>
       
       <div class="section">
-        <button class="toggle-btn" onclick="toggleExclusive('durg')">दुर्गटीका</button>
+        <button class="toggle-btn" onclick="toggleExclusive('durg')">दुर्गवृत्तिः</button>
         <div id="durg" class="toggle-content"><hr>${highlightDoubts(sutra.durg, doubtTexts)}</div>
       </div>
       <div class="section">
-        <button class="toggle-btn" onclick="toggleExclusive('skand')">स्कन्दटीका</button>
+        <button class="toggle-btn" onclick="toggleExclusive('skand')">निरुक्तभाष्यटीका(श्रीस्कन्दस्वामी)</button>
         <div id="skand" class="toggle-content"><hr>${highlightDoubts(sutra.skand, doubtTexts)}</div>
+      </div>
+       <div class="section">
+        <button class="toggle-btn" onclick="toggleExclusive('vivaran')">THE NIRUKTA</button>
+        <div id="vivaran" class="toggle-content"><hr>${highlightDoubts(sutra.vivaran, doubtTexts)}</div>
       </div>
       <button class="add-remove-bookmark" onclick="toggleBookmark(${index})">
         ${bookmarked.has(index) ? '🔖 बुकमार्क हटाएं' : '📌 बुकमार्क करें'}
@@ -216,9 +236,49 @@ function renderSutra(index) {
     </div>
   `;
 
+      // केवल meaning class वाले निर्वचन शब्द clickable बनाओ
+  container.querySelectorAll('.mark-anchor').forEach(anchor => {
+    const anchorId = anchor.id;
+
+    // term ढूंढो
+    let foundTerm = null;
+    for (const tagKey in termsByTag) {
+      foundTerm = termsByTag[tagKey].find(t => t.id === anchorId);
+      if (foundTerm) break;
+    }
+
+    if (!foundTerm) {
+      anchor.style.cursor = 'default';
+      return;
+    }
+
+    const normalizedLabel = normalizeShabda(foundTerm.label);
+
+    // customVyakhya में match करे?
+    const hasCustom = customVyakhya.some(entry => 
+      normalizeShabda(entry.shabda) === normalizedLabel
+    );
+
+    if (hasCustom) {
+      // यह meaning class वाला है → clickable
+      anchor.style.cursor = 'pointer';
+      anchor.title = 'व्याख्या देखने के लिए क्लिक करें';
+      anchor.classList.add('meaning'); // वैकल्पिक: CSS में अलग स्टाइल के लिए
+      anchor.onclick = (e) => {
+        e.stopPropagation();
+        showVyakhya(anchorId);
+      };
+    } else {
+      // meaning class में नहीं → non-clickable
+      anchor.style.cursor = 'default';
+      anchor.title = '';
+      anchor.onclick = null;
+    }
+  });
+
   listElements.forEach((el, i) => {
     el.classList.toggle('active', i === index);
-    if (i === index) document.title = `निरुक्त_(${sutra.index})`;
+    if (i === index) document.title = `นिरुक्त_(${sutra.index})`;
   });
 }
 
@@ -248,9 +308,7 @@ function populateSidebar() {
       if (leftSearchState.q && leftSearchState.q.trim()) {
         setTimeout(() => flashSearchInMain(leftSearchState.q), 60);
       }
-      // mobile: close both
-      toggleLeftSidebar(false);
-      toggleRightSidebar(false);
+      toggleSidebar(true);
     };
 
     listElements.push(li);
@@ -320,15 +378,9 @@ function buildMarkTabs(){
       markState.activeTag = tag.key;
       buildMarkTabs();     // active style refresh
       renderMarkSidebar(); // list refresh
-      // mobile: open right, close left
-      toggleRightSidebar(true);
-      toggleLeftSidebar(false);
     };
     tabs.appendChild(btn);
   });
-
-  // create mobile toggle buttons (once)
-  ensureMobileToggles();
 }
 
 function renderMarkSidebar() {
@@ -366,10 +418,6 @@ function renderMarkSidebar() {
           setTimeout(() => el.classList.remove('flash'), 1500);
         }
       }, 50);
-
-      // mobile: close both
-      toggleRightSidebar(false);
-      toggleLeftSidebar(false);
     };
     ul.appendChild(li);
   });
@@ -401,48 +449,20 @@ function toggleBookmark(index) {
   applyFilters();
 }
 
+function toggleSidebar(forceClose = null) {
+  const aside = document.getElementById('sidebar');
+  if (!aside) return;
+  if (forceClose === true) aside.classList.remove('open');
+  else if (forceClose === false) aside.classList.add('open');
+  else aside.classList.toggle('open');
+}
+
 function toggleExclusive(idToShow) {
-  ['durg', 'skand'].forEach(id => {
+  ['durg', 'skand', 'vivaran'].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     el.style.display = id === idToShow && el.style.display !== 'block' ? 'block' : 'none';
   });
-}
-
-
-// =============== MOBILE TOGGLE BUTTONS (create once) ===============
-function ensureMobileToggles(){
-  if (document.getElementById('toggleLeft') && document.getElementById('toggleRight')) return;
-
-  const header = document.getElementById('header') || document.body;
-
-  // Left button: सूची
-  if (!document.getElementById('toggleLeft')){
-    const btnL = document.createElement('button');
-    btnL.id = 'toggleLeft';
-    btnL.className = 'mobile-toggle';
-    btnL.type = 'button';
-    btnL.textContent = 'सूची';
-    btnL.addEventListener('click', () => {
-      toggleLeftSidebar();
-      toggleRightSidebar(false);
-    });
-    header.appendChild(btnL);
-  }
-
-  // Right button: शब्द
-  if (!document.getElementById('toggleRight')){
-    const btnR = document.createElement('button');
-    btnR.id = 'toggleRight';
-    btnR.className = 'mobile-toggle';
-    btnR.type = 'button';
-    btnR.textContent = 'शब्द';
-    btnR.addEventListener('click', () => {
-      toggleRightSidebar();
-      toggleLeftSidebar(false);
-    });
-    header.appendChild(btnR);
-  }
 }
 
 
@@ -499,18 +519,7 @@ function wireUI(){
     }, 150));
   }
 
-  // Tap on main closes sidebars (mobile)
-  const mainEl = document.querySelector('main') || document.getElementById('sutraContent');
-  if (mainEl){
-    mainEl.addEventListener('click', () => {
-      if (window.matchMedia('(max-width: 768px)').matches){
-        toggleLeftSidebar(false);
-        toggleRightSidebar(false);
-      }
-    });
-  }
-
-  // Build right tabs initially (also ensures mobile toggle buttons)
+  // Build right tabs initially
   buildMarkTabs();
 }
 
@@ -530,16 +539,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const rawText  = item.text  || "";
         const rawDurg  = item.durg  || "";
         const rawSkand = item.skand || "";
+        const rawVivaran = item.vivaran || "";
 
         const stripAll = s => (s || "")
-          .replace(/<[^>]*>/g, "")
-          .replace(/b(.*?)b/g, (_, p1)=> (p1||"").trim())
-          .replace(/m(.*?)m/g, (_, p1)=> (p1||"").trim())
-          .replace(/v(.*?)v/g, (_, p1)=> (p1||"").trim());
+  .replace(/<[^>]*>/g, "")
+  .replace(/#b([\s\S]*?)#b/g, (_, p1)=> (p1||"").trim())
+  .replace(/#m([\s\S]*?)#m/g, (_, p1)=> (p1||"").trim())
+  .replace(/#v([\s\S]*?)#v/g, (_, p1)=> (p1||"").trim())
+  .replace(/#s([\s\S]*?)#s/g, (_, p1)=> (p1||"").trim());
 
         const text_plain  = stripAll(rawText);
         const durg_plain  = stripAll(rawDurg);
         const skand_plain = stripAll(rawSkand);
+        const vivaran_plain = stripAll(rawVivaran);
 
         // Left search key from plain text
         const searchKey = normalizeNFC((item.index + ': ' + text_plain)).toLowerCase();
@@ -548,15 +560,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const pText  = processAllTags(item.text,  i, 'text');
         const pDurg  = processAllTags(item.durg,  i, 'durg');
         const pSkand = processAllTags(item.skand, i, 'skand');
+        const pVivaran = processAllTags(item.vivaran, i, 'vivaran');
 
         return {
           ...item,
           text:  pText.html,
           durg:  pDurg.html,
           skand: pSkand.html,
+          vivaran: pVivaran.html,
           text_plain,
           durg_plain,
           skand_plain,
+          vivaran_plain,
           _search: searchKey
         };
       });
@@ -580,3 +595,59 @@ document.addEventListener('DOMContentLoaded', () => {
       if (loader) loader.style.display = 'none';
     });
 });
+
+
+
+function showVyakhya(anchorId) {
+  const panel = document.getElementById('vyakhya');
+  const contentEl = document.getElementById('vyakhya-content');
+  const titleEl = document.getElementById('vyakhya-title');
+  if (!panel || !contentEl || !titleEl) return;
+
+  let foundTerm = null;
+  for (const tagKey in termsByTag) {
+    foundTerm = termsByTag[tagKey].find(t => t.id === anchorId);
+    if (foundTerm) break;
+  }
+
+  if (!foundTerm) {
+    return; // कोई term नहीं मिला → कुछ मत करो
+  }
+
+  const sutra = data[foundTerm.sutraIdx];
+  if (!sutra) return;
+
+  const normalizedLabel = normalizeShabda(foundTerm.label);
+
+  // केवल custom व्याख्या ढूंढो
+  const customEntry = customVyakhya.find(entry => 
+    normalizeShabda(entry.shabda) === normalizedLabel
+  );
+
+  // अगर custom व्याख्या नहीं मिली → panel बिल्कुल न खोलो
+  if (!customEntry) {
+    return;
+  }
+
+  // custom व्याख्या मिल गई → panel खोलो
+  const tagLabel = TAGS.find(t => t.key === foundTerm.tag)?.label || foundTerm.tag;
+
+  titleEl.textContent = `व्याख्या: ${foundTerm.label}`;
+
+  contentEl.innerHTML = `
+    <p><strong>शब्द:</strong> ${foundTerm.label}</p>
+    <p><strong>प्रकार:</strong> ${tagLabel}</p>
+    <p><strong>सूत्र:</strong> ${sutra.index}</p>
+    <hr style="margin:10px 0; border-color:#a0785a;">
+    <div style="font-size:1.1rem; line-height:1.9; padding:8px 0;">
+      <strong>व्याख्या:</strong><br>
+      ${customEntry.vyakhya}
+    </div>
+  `;
+
+  panel.classList.add('open');
+}
+function closeVyakhya() {
+  const panel = document.getElementById('vyakhya');
+  if (panel) panel.classList.remove('open');
+}
