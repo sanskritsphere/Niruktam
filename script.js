@@ -692,6 +692,17 @@ if (dragHandle && panel) {
   document.addEventListener('touchend', dragEnd);
 }
 
+
+// *** यही नया fix जोड़ें ***
+const closeBtn = document.querySelector('#vyakhya .vyakhya-header button');
+if (closeBtn) {
+  closeBtn.addEventListener('mousedown', (e) => e.stopPropagation());
+  closeBtn.addEventListener('touchstart', (e) => {
+    if (e.touches) e.stopPropagation();
+  });
+}
+
+
 function dragStart(e) {
   if (e.type === "touchstart") {
     initialX = e.touches[0].clientX - xOffset;
