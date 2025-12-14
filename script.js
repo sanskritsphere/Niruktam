@@ -3,9 +3,8 @@
 // =============== CUSTOM VYAKHYA DATA (केवल meaning class वाले) ===============
 const customVyakhya = [
   {
-    
     "shabda": "समाम्नायः",
-    "vyakaran": "निष्पत्तिः- सम् + आ + <a target='blank' href='https://ashtadhyayi.com/dhatu/01.1078?tab=&upasarga=sam%3BAN'>म्ना (अभ्यासे)</a>'घञ्' (३-३-१८) । 'युक्' (७-३-३३)",
+    "vyakaran": "सम् + आ + <a target='blank' href='https://ashtadhyayi.com/dhatu/01.1078?tab=&upasarga=sam%3BAN'>म्ना (अभ्यासे)</a>'घञ्' (३-३-१८) । 'युक्' (७-३-३३)",
     "vyakhya": "सम्यक् आम्नातः शास्त्रीय शब्दसमूहः, जो परम्परया गुरु-शिष्यक्रमेण प्राप्त होता है।",
     "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%B8%E0%A4%AE%E0%A4%BE%E0%A4%AE%E0%A5%8D%E0%A4%A8%E0%A4%BE%E0%A4%AF%E0%A4%83'>कोशे पश्य</a>"
   },
@@ -39,7 +38,7 @@ const customVyakhya = [
   },
   {
     "shabda": "नामानि",
-    "vyakaran": "<a target='blank' href='https://ashtadhyayi.com/dhatu?search=nam'>नम्</a> + मनिन् (नामन्सीमन् इति <a target='blank' href='https://ashtadhyayi.com/unaadi?search=%E0%A4%A8%E0%A4%BE%E0%A4%AE%E0%A4%A8%E0%A5%8D'उणादौ</a> प्रतिपादितम्)",
+    "vyakaran": "<a target='blank' href='https://ashtadhyayi.com/dhatu?search=nam'>नम्</a> + मनिन् (नामन्सीमन् इति <a target='blank' href='https://ashtadhyayi.com/unaadi?search=%E0%A4%A8%E0%A4%BE%E0%A4%AE%E0%A4%A8%E0%A5%8D'>उणादौ</a> प्रतिपादितम्)",
     "vyakhya": "जिस पद में द्रव्य या वस्तु का बोध प्रधान हो, वह नामपद होता है।",
      "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%A8%E0%A4%BE%E0%A4%AE%E0%A4%A8%E0%A5%8D'>कोशे पश्य</a>"
 
@@ -650,7 +649,7 @@ function showVyakhya(anchorId) {
   // custom व्याख्या मिल गई → panel खोलो
   const tagLabel = TAGS.find(t => t.key === foundTerm.tag)?.label || foundTerm.tag;
 
-  titleEl.textContent = `व्याख्या: ${foundTerm.label}`;
+  titleEl.textContent = `निर्वचनम्: = ${foundTerm.label}`;
 
   contentEl.innerHTML = `
     <p><strong>शब्द:</strong> ${foundTerm.label}</p>
