@@ -53,10 +53,10 @@ let currentIndex = 0;
 let listElements = [];
 
 const TAGS = [
-  { key: '#b', label: 'निर्वचन' },  // #b(.*?)b#
-  { key: '#m', label: 'मन्त्र' },   // #m(.*?)m#
-  { key: '#v', label: 'विशेष' }, // #v(.*?)v#
-  { key: '#s', label: 'श्लोक'}   // #s(.*?)s#
+  { key: '#b', label: 'निर्वचनानि' },  // #b(.*?)b#
+  { key: '#m', label: 'मन्त्त्राः' },   // #m(.*?)m#
+  { key: '#v', label: 'विशेषः' }, // #v(.*?)v#
+  { key: '#s', label: 'उद्धरणानि'}   // #s(.*?)s#
 ];
 
 const termsByTag = {};               // { b:[], m:[], v:[] }
@@ -245,9 +245,9 @@ function renderSutra(index) {
        <div class="section">
         <button class="toggle-btn" onclick="toggleExclusive('vivaran')">THE NIRUKTA</button>
         <div id="vivaran" class="toggle-content"><hr>${highlightDoubts(sutra.vivaran, doubtTexts)}</div>
-      </div>
+      </div><br>
       <button class="add-remove-bookmark" onclick="toggleBookmark(${index})">
-        ${bookmarked.has(index) ? '🔖 बुकमार्क हटाएं' : '📌 बुकमार्क करें'}
+        ${bookmarked.has(index) ? '🔖 स्मृतिसूच्या अपनय' : '📌 स्मृतिसूच्यां स्थापय'}
       </button>
       <br><br><br><br>
     </div>
@@ -295,7 +295,7 @@ function renderSutra(index) {
 
   listElements.forEach((el, i) => {
     el.classList.toggle('active', i === index);
-    if (i === index) document.title = `นिरुक्त_(${sutra.index})`;
+    if (i === index) document.title = `निरुक्तम्_(${sutra.index})`;
   });
 }
 

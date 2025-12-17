@@ -17,7 +17,7 @@
 
   <aside id="sidebar">
     <h2>पाठ-सूची</h2>
-    <input id="searchInput" oninput="leftSearch()" type="text" placeholder="पाठ खोजें...">
+    <input id="searchInput" oninput="leftSearch()" type="text" placeholder="अन्विष्यं पदमिह लिखेत्...">
     <select id="filterAdhyay" name="selector"><option value=""></option></select>
     <button id="filterBookmarked">📚 केवल बुकमार्क</button>
        <ul id="sutraList"></ul>
@@ -40,6 +40,14 @@
   <ul id="markList"></ul>
 </aside>
 
+<!-- =================== -->
+ <div id="vyakhya" class="vyakhya-panel">
+  <div class="vyakhya-header" id="vyakhyaDragHandle">
+    <span id="vyakhya-title">व्याख्या</span>
+    <button onclick="closeVyakhya()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;">✖</button>
+  </div>
+  <div id="vyakhya-content"></div>
+</div>
 
  <script src="script.js" defer></script>
 </body>
