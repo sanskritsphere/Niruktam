@@ -12,7 +12,7 @@ const customVyakhya = [
     "shabda": "निघण्टवः",
     "vyakaran": "नि + <a target='blank' href='https://ashtadhyayi.com/dhatu?search=gam'>गम्</a> + तु / नि+<a target='blank' href='https://ashtadhyayi.com/dhatu?search=ghaTi'>घटि (भाषार्थे)</a>+णिच् 'कुः' (उ० १-३७),",
     "vyakhya": "अर्थान् निघण्टयत्यस्मान्निघण्टुः परिकीर्तितः",
-    "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%B8%E0%A4%AE%E0%A4%BE%E0%A4%AE%E0%A5%8D%E0%A4%A8%E0%A4%BE%E0%A4%AF%E0%A4%83'>कोशे पश्य</a>"
+    "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=nighaNTu'>कोशे पश्य</a>"
 
   },
   {
