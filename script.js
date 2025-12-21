@@ -243,7 +243,7 @@ function renderSutra(index) {
         <div id="skand" class="toggle-content"><hr>${highlightDoubts(sutra.skand, doubtTexts)}</div>
       </div>
        <div class="section">
-        <button class="toggle-btn" onclick="toggleExclusive('vivaran')">THE NIRUKTA</button>
+        <button class="toggle-btn" onclick="toggleExclusive('vivaran')">English commentary of Lakshmana Swaroopa</button>
         <div id="vivaran" class="toggle-content"><hr>${highlightDoubts(sutra.vivaran, doubtTexts)}</div>
       </div><br>
       <button class="add-remove-bookmark" onclick="toggleBookmark(${index})">
