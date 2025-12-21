@@ -16,14 +16,14 @@ const customVyakhya = [
 
   },
   {
-    "shabda": "अपि वा हननादेव स्युः",
+    "shabda": "आहननादेव",
     "vyakaran": "नि + <a target='blank' href='https://ashtadhyayi.com/dhatu?search=han'>हन्</a> + तु",
     "vyakhya": "हन धातु से निष्पत्ति का विकल्पात्मक मत, समाहार-अर्थ के कारण।",
     "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%B8%E0%A4%AE%E0%A4%BE%E0%A4%AE%E0%A5%8D%E0%A4%A8%E0%A4%BE%E0%A4%AF%E0%A4%83'>कोशे पश्य</a>"
 
   },
   {
-    "shabda": "यद्वा समाहृता भवन्ति",
+    "shabda": "समाहृता",
     "vyakaran": "नि + <a target='blank' href='https://ashtadhyayi.com/dhatu?search=%E0%A4%B9%E0%A5%83'>हृ</a>",
     "vyakhya": "छन्दों से शब्दों के संग्रह के कारण निघण्टु नामकरण का दूसरा मत।",
     "link" : "<a target='blank' href='https://ashtadhyayi.com/kosha?search=%E0%A4%B8%E0%A4%AE%E0%A4%BE%E0%A4%AE%E0%A5%8D%E0%A4%A8%E0%A4%BE%E0%A4%AF%E0%A4%83'>कोशे पश्य</a>"
